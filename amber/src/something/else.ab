@@ -1,0 +1,10 @@
+import * from "std"
+
+main(args) {
+    if len(args) < 1 {
+        echo "Please tell me your name!"
+        exit(1)
+    }
+    let name = args[0]
+    echo "Hello, {name}!"
+}
