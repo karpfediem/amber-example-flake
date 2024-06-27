@@ -20,10 +20,20 @@ pkgs.stdenv.mkDerivation {
   ];
 
   installPhase = ''
-    set -e
     mkdir $out
-    amber build.ab build.sh
-    patchShebangs build.sh
-    ./build.sh src $out
+    
+    build_amber() {
+      set -xe
+      local src_dir=$1
+      local out_dir=$2
+      local file_full_path=$3
+      local file=$(realpath --relative-to "$src_dir" "$file_full_path")
+      local full_out_path="$out_dir/$file"
+      mkdir -p $(dirname "$full_out_path")
+      amber "$src_dir/$file" "''${full_out_path%.*}.sh"
+    }
+
+    export -f build_amber
+    find $src -type f -regex ".*\.ab$" -exec bash -c 'build_amber "$src" "$out" "$0"' {} \;
   '';
 }
