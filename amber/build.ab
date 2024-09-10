@@ -1,6 +1,7 @@
-import * from "std"
+import { exit } from "std/env"
+import { len, lines } from "std/text"
 
-fun compile_file(src: Text, out: Text, filepath: Text): Null {
+fun compile_file(src: Text, out: Text, filepath: Text): Null? {
 	let relative_file = $realpath --relative-to {src} {filepath}$?
 	let full_out = "{out}/{relative_file}"
 	let full_out_dir = $dirname {full_out}$?
@@ -13,7 +14,7 @@ fun compile_file(src: Text, out: Text, filepath: Text): Null {
 	echo "Compiled output saved in {final_out}"
 }
 
-fun compile_directory(src: Text, out: Text): Null {
+fun compile_directory(src: Text, out: Text): Null? {
 	echo "Compiling every amber file found in the source directory: {src}"
 	let regex = ".*\.ab\$"
 	let lines = $find {src} -type f -regex {regex}$?
@@ -26,22 +27,22 @@ fun compile_directory(src: Text, out: Text): Null {
 
 main (args) {
 	if {
-		len(args) < 1 {
+		len(args) < 2 {
 			echo "Path to source directory missing."
 			echo "Usage: build.sh <sourcedir> <outputdir>"
 			echo "       build.sh path/to/amber/scripts path/to/compiled/scripts"
 			exit(1)
 		}
-		len(args) < 2 {
+		len(args) < 3 {
 			echo "Path to output directory missing."
 			echo "Usage: build.sh <sourcedir> <outputdir>"
-			echo "       build.sh {args[0]} path/to/compiled/scripts"
+			echo "       build.sh {args[1]} path/to/compiled/scripts"
 			exit(1)
 		}
 	}
 
-	let src = args[0]
-	let out = args[1]
+	let src = args[1]
+	let out = args[2]
 	
 	echo "Creating output directory (if it does not exist): {out}"
 	$mkdir -p {out}$?

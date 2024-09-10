@@ -1,4 +1,5 @@
-import * from "std"
+import { exit } from "std/env"
+import { len } from "std/text"
 
 main(args) {
     if len(args) < 1 {
