@@ -1,11 +1,10 @@
-import { exit } from "std/env"
 import { len } from "std/text"
 
 main(args) {
-    if len(args) < 1 {
+    if len(args) < 2 {
         echo "Please tell me your name!"
-        exit(1)
+        exit 1
     }
-    let name = args[0]
+    let name = args[1]
     echo "Hello, {name}!"
 }
